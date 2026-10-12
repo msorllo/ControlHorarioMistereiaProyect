@@ -53,3 +53,7 @@ next-env.d.ts
 
 # guía interna ajena a este producto (no publicar)
 /GUIA IA/
+
+# enlace local a Vercel
+.vercel
+!.env.example

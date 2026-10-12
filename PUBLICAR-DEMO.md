@@ -13,7 +13,15 @@ Genera `demo-dist/` (≈2 MB). Se compila en una copia temporal sin `/api`, `.en
 `scripts/`, así que **nada sensible puede acabar dentro**. La app normal (`npm run dev` + PocketBase)
 no cambia.
 
+## Dónde está publicada
+
+- Vercel (producción): <https://control-horario-mistereia.vercel.app> — `npm run deploy:vercel` (usa `scripts/vercel.demo.json` para las cabeceras).
+- Repositorio: <https://github.com/msorllo/ControlHorarioMistereiaProyect>.
+- Escaneo del sitio publicado (2026-10-12): sin claves, contraseñas de administrador ni datos personales.
+
 ## Cómo publicarla gratis (Cloudflare Pages, sin límite de ancho de banda)
+
+Atajo: `npx wrangler login` (una vez, abre el navegador para autorizar) y `npm run deploy:cloudflare`.
 
 1. Cloudflare → Workers & Pages → Create → Pages → *Direct upload*.
 2. Sube la carpeta `demo-dist/`. (`_headers` ya incluye CSP y cabeceras de seguridad.)
@@ -37,11 +45,16 @@ Alternativa por consola: `npx wrangler pages deploy demo-dist --project-name con
 
 ### Pendiente / a vigilar
 - **No** subir nunca `pocketbase/pb_data/`, `.env.local` ni `pocketbase.exe` a ningún repositorio o hosting.
-  El `.gitignore` ya los excluye, pero el repo git de esta carpeta es el de `C:\Users\msorl` (accidental):
-  antes de publicar código, crea un repo propio dentro de este proyecto (`git init`) y comprueba
-  `git rev-parse --show-toplevel`.
+  El `.gitignore` ya los excluye. Este proyecto ya tiene su propio repositorio git (antes colgaba del repo accidental de la carpeta de usuario); comprueba `git rev-parse --show-toplevel` antes de commitear.
 - La contraseña de admin local de PocketBase (`.env.local`) quedó escrita en notas antiguas de este proyecto:
   cámbiala si algún día expones PocketBase fuera de tu PC.
 - Limitaciones de la demo (por diseño): sin chat entre usuarios reales, sin sincronizar entre dispositivos,
   sin IA real, el panel de SuperAdmin no existe. Si el visitante borra los datos del navegador, la demo se reinicia.
 - Ofrecer una versión con cuentas reales y multi-dispositivo exigiría un backend alojado 24/7 (no es coste 0).
+
+## PWA instalable (pendiente)
+
+Una PWA es una web que el visitante puede "instalar" como app (icono en el escritorio o el móvil, ventana propia
+y funcionamiento sin conexión). Ya existen `public/manifest.webmanifest` e `icon.svg`, y los paquetes `serwist`
+y `@serwist/next` están instalados, pero falta el service worker (`sw.ts`), registrarlo y declarar iconos PNG de
+192 y 512 px en el manifest. Hasta entonces el navegador no ofrece "Instalar". En la demo estática encaja bien.

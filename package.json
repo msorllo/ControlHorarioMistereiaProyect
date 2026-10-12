@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "build:demo": "node scripts/build-demo.mjs"
+    "build:demo": "node scripts/build-demo.mjs",
+    "deploy:vercel": "npm run build:demo && cd demo-dist && vercel deploy --prod --yes",
+    "deploy:cloudflare": "npm run build:demo && npx wrangler pages deploy demo-dist --project-name control-horario-mistereia --branch main"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.110.0",

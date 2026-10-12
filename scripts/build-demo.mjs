@@ -35,6 +35,8 @@ const code = r.status ?? 1;
 
 if (code === 0 && existsSync(path.join(work, "demo-dist"))) {
   cpSync(path.join(work, "demo-dist"), path.join(root, "demo-dist"), { recursive: true });
+  // Cabeceras de seguridad para Vercel (Cloudflare usa public/_headers, que ya va dentro).
+  cpSync(path.join(root, "scripts", "vercel.demo.json"), path.join(root, "demo-dist", "vercel.json"));
   console.log("\n✔ Demo lista en demo-dist/ (sube esa carpeta a un hosting estático).");
 }
 // Quita el enlace antes de borrar para no tocar node_modules real.
