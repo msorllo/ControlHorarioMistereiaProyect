@@ -1,0 +1,55 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# PocketBase (backend local) — datos y binario NO se versionan; el esquema (pb_migrations) SÍ
+/pocketbase/pb_data/
+/pocketbase/pocketbase.exe
+/pocketbase/CHANGELOG.md
+/pocketbase/LICENSE.md
+/businesses-data/
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# demo estática (build:demo)
+/demo-dist/
+/.demo-build/
+
+# guía interna ajena a este producto (no publicar)
+/GUIA IA/

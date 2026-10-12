@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+/*
+  Sistema de tokens de "Control Horario Mistereia".
+  Filosofía de marca: del misterio a la claridad.
+
+  Cada negocio (tenant) puede sobreescribir --brand-primary y --brand-accent
+  para personalizar su espacio de trabajo, sin tocar el resto del sistema.
+  Esto se hará inyectando estas variables en :root desde la configuración del negocio.
+*/
+
+:root {
+  /* Marca (valores por defecto Mistereia) */
+  --brand-primary: #7c5cff; /* violeta misterio */
+  --brand-primary-strong: #6438ff;
+  --brand-accent: #22d3ee; /* cian claridad */
+  --on-primary: #ffffff; /* texto sobre el color de marca (se ajusta solo según su claridad) */
+  --on-accent: #12121a;
+
+  /* Superficies (modo claro) */
+  --bg: #f6f6fb;
+  --surface: #ffffff;
+  --surface-2: #f0f0f7;
+  --border: #e5e5ef;
+
+  /* Texto */
+  --text: #12121a;
+  --text-muted: #63636f;
+
+  /* Estados */
+  --success: #16a34a;
+  --warning: #f59e0b;
+  --danger: #e11d48;
+
+  --radius: 0.9rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b0b14;
+    --surface: #14141f;
+    --surface-2: #1b1b28;
+    --border: #262636;
+    --text: #f4f4fb;
+    --text-muted: #a0a0b2;
+  }
+}
+
+/* Mapeo de tokens a utilidades de Tailwind v4 (bg-canvas, text-ink, bg-primary, …) */
+@theme inline {
+  --color-canvas: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface2: var(--surface-2);
+  --color-border: var(--border);
+  --color-ink: var(--text);
+  --color-muted: var(--text-muted);
+  --color-primary: var(--brand-primary);
+  --color-primary-strong: var(--brand-primary-strong);
+  --color-on-primary: var(--on-primary);
+  --color-on-accent: var(--on-accent);
+  --color-accent: var(--brand-accent);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+
+  --font-sans: var(--font-jakarta);
+  --font-display: var(--font-bricolage);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-jakarta), system-ui, sans-serif;
+}
+
+/* Impresión / exportar a PDF: oculta la interfaz y fuerza tema claro legible. */
+@media print {
+  header,
+  nav,
+  .no-print {
+    display: none !important;
+  }
+  :root {
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --surface-2: #f4f4f4;
+    --border: #d4d4d4;
+    --text: #111111;
+    --text-muted: #555555;
+  }
+  body {
+    background: #fff;
+  }
+}
