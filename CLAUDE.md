@@ -17,7 +17,7 @@ SaaS de control horario/RRHH multi-negocio (Next.js 16 PWA + PocketBase, NO Supa
 ## Despliegue
 - Repo: https://github.com/msorllo/ControlHorarioMistereiaProyect (rama `main`).
 - Demo pública: https://control-horario-mistereia.vercel.app (`npm run deploy:vercel`). Cloudflare Pages: `npm run deploy:cloudflare` tras `npx wrangler login` (pendiente de autorizar por la usuaria).
-- Enlazada desde la web de Mistereia: `Desktop/Mistereia/MISTEREIA/WEB - Google` (`/proyectos`, tarjeta `control-horario`), rama `rediseno-portfolio`; se publica al fusionar con `main`.
+- Enlazada desde la web de Mistereia: `Desktop/Mistereia/MISTEREIA/WEB - Google` (`/proyectos`, tarjeta `control-horario`), publicada en https://mistereia.com/proyectos (2026-10-12). Para cambiarla: editar en `rediseno-portfolio`, minificar y publicar con `tools/PUBLICAR.bat`.
 
 ## Pendiente
-- Cloudflare Pages, PWA instalable (Serwist instalado, sin service worker), fusionar la landing a `main`, probar en la demo subida de documentos y alta de empleados.
+- Cloudflare Pages, PWA instalable (Serwist instalado, sin service worker), probar en la demo subida de documentos y alta de empleados.
