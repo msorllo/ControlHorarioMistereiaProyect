@@ -48,27 +48,49 @@ export function col(name: string): Map<string, Rec> {
   return m;
 }
 
-export function persist(c: string, rec: Rec) {
-  if (!db) return;
+// Las escrituras se agrupan y se vuelcan en UNA transacción por tick: sembrar la demo (≈150 registros)
+// cuesta una transacción en vez de 150, y la interfaz no espera al disco.
+type Op = { put?: { k: string; c: string; rec: Rec }; del?: string };
+let pending: Op[] = [];
+let scheduled = false;
+
+function flush() {
+  scheduled = false;
+  const ops = pending;
+  pending = [];
+  if (!db || !ops.length) return;
   try {
-    db.transaction(STORE, "readwrite").objectStore(STORE).put({ k: `${c}:${rec.id}`, c, rec });
+    const os = db.transaction(STORE, "readwrite").objectStore(STORE);
+    for (const op of ops) {
+      if (op.put) os.put(op.put);
+      else if (op.del) os.delete(op.del);
+    }
   } catch {
     /* cuota o error: se mantiene en memoria */
   }
 }
 
-export function unpersist(c: string, id: string) {
+function enqueue(op: Op) {
   if (!db) return;
-  try {
-    db.transaction(STORE, "readwrite").objectStore(STORE).delete(`${c}:${id}`);
-  } catch {
-    /* nada */
+  pending.push(op);
+  if (!scheduled) {
+    scheduled = true;
+    queueMicrotask(flush);
   }
+}
+
+export function persist(c: string, rec: Rec) {
+  enqueue({ put: { k: `${c}:${rec.id}`, c, rec } });
+}
+
+export function unpersist(c: string, id: string) {
+  enqueue({ del: `${c}:${id}` });
 }
 
 /** Borra TODOS los datos del visitante (botón «Restablecer demo»). */
 export async function wipeAll() {
   data = new Map();
+  pending = [];
   if (db) {
     await new Promise<void>((resolve) => {
       const tx = db!.transaction(STORE, "readwrite");

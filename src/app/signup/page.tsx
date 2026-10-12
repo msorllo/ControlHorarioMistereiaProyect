@@ -1,8 +1,9 @@
 "use client";
 
 import { apiFetch } from "@/lib/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useAuth } from "@/providers/AuthProvider";
 
 export default function SignupPage() {
@@ -14,6 +15,11 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+
+  // Precarga el panel para que, al entrar, abra al instante.
+  useEffect(() => {
+    router.prefetch("/app");
+  }, [router]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -40,16 +46,16 @@ export default function SignupPage() {
     <div className="relative flex flex-1 items-center justify-center overflow-hidden px-6 py-12">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-70 blur-3xl"
+        className="pointer-events-none absolute inset-0 opacity-70"
         style={{
           background:
             "radial-gradient(500px 320px at 50% 0%, color-mix(in srgb, var(--brand-primary) 30%, transparent), transparent), radial-gradient(420px 280px at 80% 100%, color-mix(in srgb, var(--brand-accent) 22%, transparent), transparent)",
         }}
       />
       <div className="relative z-10 w-full max-w-md">
-        <a href="/" className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3.5 py-1.5 text-sm text-ink transition hover:border-primary">
+        <Link href="/" className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3.5 py-1.5 text-sm text-ink transition hover:border-primary">
           <span aria-hidden>←</span> Volver al inicio
-        </a>
+        </Link>
         <div className="mb-6 flex items-center justify-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/icon.svg" alt="Mistereia" width={40} height={40} className="rounded-xl" />
@@ -97,7 +103,7 @@ export default function SignupPage() {
 
           <p className="mt-5 text-center text-sm text-muted">
             ¿Ya tienes cuenta?{" "}
-            <a href="/login" className="font-medium text-primary hover:underline">Entrar</a>
+            <Link href="/login" className="font-medium text-primary hover:underline">Entrar</Link>
           </p>
         </div>
       </div>

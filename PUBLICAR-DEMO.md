@@ -58,3 +58,14 @@ Una PWA es una web que el visitante puede "instalar" como app (icono en el escri
 y funcionamiento sin conexión). Ya existen `public/manifest.webmanifest` e `icon.svg`, y los paquetes `serwist`
 y `@serwist/next` están instalados, pero falta el service worker (`sw.ts`), registrarlo y declarar iconos PNG de
 192 y 512 px en el manifest. Hasta entonces el navegador no ofrece "Instalar". En la demo estática encaja bien.
+
+## Rendimiento (2026-10-12)
+
+Lighthouse móvil: **98** en `/` y `/login` (TBT 30-40 ms, CLS 0). Cambio de sección ya visitada o precargada: sin peticiones de red.
+
+- **Precarga de secciones arreglada:** Next exporta los fragmentos en carpetas y el navegador los pide con puntos (404). `build-demo.mjs` genera también los nombres con puntos. Sin esto, cada sección se descarga al pulsarla. Si un día se ve lento, mirar primero los 404 de `__next.*.txt`.
+- Archivos con hash (`/_next/static/*`) con caché `immutable` de 1 año (antes `max-age=0`).
+- La demo compila con `src/lib/pb.demo.ts` en lugar de `pb.ts`: el SDK de PocketBase no entra en el bundle.
+- Sin filtros `blur`/`backdrop-blur` (caros en móvil); los degradados ya son suaves.
+- IndexedDB: escrituras agrupadas en una transacción; la base se abre y se siembra en segundo plano antes de entrar.
+- No ejecutar `npm run build:demo` con una terminal o servidor abiertos **dentro** de `demo-dist/`: Windows bloquea la carpeta (EPERM) y la compilación falla.

@@ -58,22 +58,40 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     return clearBrand;
   }, [business]);
 
+  // Precarga en segundo plano las secciones del menú (cuando el navegador está libre),
+  // para que al pulsarlas abran al instante en vez de descargarse en ese momento.
+  const role = user?.role as Role | undefined;
+  const modules = business?.modules;
+  useEffect(() => {
+    if (!role) return;
+    const hrefs = NAV.filter((n) => !n.soon && n.roles.includes(role) && (!n.module || modules?.[n.module] !== false)).map(
+      (n) => n.href,
+    );
+    const run = () => hrefs.forEach((h) => router.prefetch(h));
+    if (typeof window.requestIdleCallback === "function") {
+      const id = window.requestIdleCallback(run, { timeout: 2500 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const id = window.setTimeout(run, 400);
+    return () => window.clearTimeout(id);
+  }, [role, modules, router]);
+
   if (loading || !user) {
     return (
       <div className="flex flex-1 items-center justify-center text-muted">Cargando tu espacio…</div>
     );
   }
 
-  const role = user.role as Role;
+  const navRole = user.role as Role;
   const items = NAV.filter(
-    (n) => n.roles.includes(role) && (!n.module || business?.modules?.[n.module] !== false),
+    (n) => n.roles.includes(navRole) && (!n.module || business?.modules?.[n.module] !== false),
   );
 
   return (
     <div className="flex flex-1 flex-col">
       <DemoBanner />
       {/* Barra superior */}
-      <header className="sticky top-0 z-20 border-b border-border bg-surface/80 backdrop-blur">
+      <header className="sticky top-0 z-20 border-b border-border bg-surface">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3">
           <div className="flex items-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -86,7 +104,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <div className="flex items-center gap-3">
             <div className="hidden text-right sm:block">
               <p className="text-sm font-medium text-ink">{user.name}</p>
-              <p className="text-xs text-muted">{ROLES[role].name}</p>
+              <p className="text-xs text-muted">{ROLES[navRole].name}</p>
             </div>
             <button
               onClick={logout}
@@ -138,7 +156,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* Navegación inferior (móvil) */}
-      <nav className="sticky bottom-0 z-20 flex items-center justify-around border-t border-border bg-surface/90 px-2 py-1.5 backdrop-blur md:hidden">
+      <nav className="sticky bottom-0 z-20 flex items-center justify-around border-t border-border bg-surface px-2 py-1.5 md:hidden">
         {items.slice(0, 5).map((n) => {
           const active = pathname === n.href;
           const inner = (

@@ -12,6 +12,7 @@ SaaS de control horario/RRHH multi-negocio (Next.js 16 PWA + PocketBase, NO Supa
 - Errores de PocketBase al usuario: traducidos con `friendlyPbError` (`src/lib/pb-errors.ts`).
 - **Nunca** subir `.env*`, `pocketbase/pb_data/`, `pocketbase.exe` (datos reales). `GUIA IA/` es ajena y está ignorada. Los seeds exigen `PB_ADMIN_*` por entorno.
 - Calidad: `npx tsc --noEmit` debe pasar antes de compilar la demo.
+- Rendimiento de la demo: `pb.demo.ts` sustituye a `pb.ts` al compilar (misma API pública en ambos); `build-demo.mjs` aplana los fragmentos `__next.*` para que la precarga no dé 404; no uses `blur-*`/`backdrop-blur` ni `<a href>` interno (usa `<Link>`). Detalle en `PUBLICAR-DEMO.md`.
 
 ## Despliegue
 - Repo: https://github.com/msorllo/ControlHorarioMistereiaProyect (rama `main`).

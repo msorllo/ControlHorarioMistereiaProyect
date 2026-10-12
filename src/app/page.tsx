@@ -49,7 +49,7 @@ export default function Home() {
       {/* Resplandor de marca de fondo */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 -top-40 h-96 opacity-60 blur-3xl"
+        className="pointer-events-none absolute inset-x-0 -top-40 h-96 opacity-60"
         style={{
           background:
             "radial-gradient(600px 300px at 30% 0%, color-mix(in srgb, var(--brand-primary) 35%, transparent), transparent), radial-gradient(500px 260px at 80% 10%, color-mix(in srgb, var(--brand-accent) 28%, transparent), transparent)",
